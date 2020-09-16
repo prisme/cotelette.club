@@ -41,7 +41,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-
+  font-family: 'Vesper Libre', serif;
   &,
   & a {
     color: white;
