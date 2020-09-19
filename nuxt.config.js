@@ -1,10 +1,6 @@
 export default {
   mode: 'universal',
   target: 'static',
-  /*
-   ** Headers of the page
-   ** See https://nuxtjs.org/api/configuration-head
-   */
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -18,32 +14,11 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  /*
-   ** Global CSS
-   */
-  css: [],
-  /*
-   ** Plugins to load before mounting the App
-   ** https://nuxtjs.org/guide/plugins
-   */
+  css: ['assets/styles/index.scss'],
   plugins: [],
-  /*
-   ** Auto import components
-   ** See https://nuxtjs.org/api/configuration-components
-   */
   components: true,
-  /*
-   ** Nuxt.js dev-modules
-   */
-  buildModules: ['@nuxtjs/google-fonts'],
-  /*
-   ** Nuxt.js modules
-   */
+  buildModules: ['@nuxtjs/google-fonts', '@nuxtjs/svg'],
   modules: ['@nuxtjs/pwa', '@nuxtjs/prismic'],
-  /*
-   ** Build configuration
-   ** See https://nuxtjs.org/api/configuration-build/
-   */
   prismic: {
     endpoint: 'https://cotelette.cdn.prismic.io/api/v2',
     disableGenerator: false,

@@ -1,18 +1,42 @@
 <template>
-  <div class="app">
+  <article class="root">
+    <prismic-rich-text class="name" :field="name" />
+
+    <nav>
+      <ul>
+        <li v-for="link in contact_links" :key="link.id">
+          <prismic-link :field="link.link">{{
+            $prismic.asText(link.label)
+          }}</prismic-link>
+        </li>
+      </ul>
+    </nav>
+
+    <prismic-rich-text class="job-title" :field="job_title" />
+    <button class="showreel-cta">
+      <span>show</span>
+      <PlayBtn />
+      <span>reel</span>
+    </button>
+    <prismic-embed class="showreel" :field="showreel" />
+
+    <prismic-rich-text class="title" :field="title" />
+    <prismic-rich-text class="description" :field="description" />
+    <prismic-image class="photo" :field="photo" />
+    <prismic-rich-text class="credit" :field="credit" />
+
     <video autoplay loop playsinline muted class="video-background">
       <source :src="video.url" type="video/mp4" />
     </video>
-    <div class="wrapper">
-      <prismic-rich-text class="title" :field="title" />
-      <prismic-embed class="showreel" :field="showreel" />
-      <prismic-rich-text class="description" :field="description" />
-    </div>
-  </div>
+  </article>
 </template>
 
 <script>
+import PlayBtn from '~/assets/images/play.svg?inline'
 export default {
+  components: {
+    PlayBtn,
+  },
   async asyncData({ $prismic, params, error }) {
     try {
       // get lang param from url or use prismic default
@@ -34,25 +58,20 @@ export default {
 </script>
 
 <style lang="scss">
-.app {
-  display: flex;
-  margin: 0 auto;
+.root {
   min-height: 100vh;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   font-family: 'Vesper Libre', serif;
-  &,
-  & a {
-    color: white;
-  }
+  color: white;
 }
 .video-background {
   object-fit: cover;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
+  pointer-events: none;
 }
 .wrapper {
   max-width: 80%;
