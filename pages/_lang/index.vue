@@ -2,9 +2,9 @@
   <article class="root">
     <prismic-rich-text class="name" :field="name" />
 
-    <nav>
-      <ul>
-        <li v-for="link in contact_links" :key="link.id">
+    <nav class="contact">
+      <ul class="contact__list">
+        <li v-for="link in contact_links" :key="link.id" class="contact__item">
           <prismic-link :field="link.link">{{
             $prismic.asText(link.label)
           }}</prismic-link>
@@ -12,19 +12,26 @@
       </ul>
     </nav>
 
-    <prismic-rich-text class="job-title" :field="job_title" />
-    <button class="showreel-cta">
-      <span>show</span>
-      <PlayBtn />
-      <span>reel</span>
-    </button>
-    <prismic-embed class="showreel" :field="showreel" />
+    <div class="money">
+      <prismic-rich-text class="job-title" :field="job_title" />
+      <button class="showreel-cta">
+        <span>show</span>
+        <PlayBtn class="showreel__play" @click="playReel" />
+        <span>reel</span>
+      </button>
+      <prismic-embed class="showreel" :field="showreel" ref="showreel" />
+    </div>
 
-    <prismic-rich-text class="title" :field="title" />
-    <prismic-rich-text class="description" :field="description" />
-    <prismic-image class="photo" :field="photo" />
-    <prismic-rich-text class="credit" :field="credit" />
-
+    <div class="bio">
+      <div class="bio__text">
+        <prismic-rich-text class="bio__title" :field="title" />
+        <prismic-rich-text class="bio__copy" :field="description" />
+      </div>
+      <div class="bio__photo">
+        <prismic-image class="photo" :field="photo" />
+        <prismic-rich-text class="credit" :field="credit" />
+      </div>
+    </div>
     <video autoplay loop playsinline muted class="video-background">
       <source :src="video.url" type="video/mp4" />
     </video>
@@ -36,6 +43,12 @@ import PlayBtn from '~/assets/images/play.svg?inline'
 export default {
   components: {
     PlayBtn,
+  },
+  methods: {
+    playReel() {
+      const { display } = this.$refs.showreel.style
+      this.$refs.showreel.style.display = display === 'block' ? 'none' : 'block'
+    },
   },
   async asyncData({ $prismic, params, error }) {
     try {
@@ -60,8 +73,6 @@ export default {
 <style lang="scss">
 .root {
   min-height: 100vh;
-  font-family: 'Vesper Libre', serif;
-  color: white;
 }
 .video-background {
   object-fit: cover;
@@ -73,12 +84,85 @@ export default {
   z-index: -1;
   pointer-events: none;
 }
-.wrapper {
-  max-width: 80%;
-  text-align: left;
+.name {
+  position: absolute;
+  top: 50px;
+  left: 60px;
+  * {
+    font-size: rem(16px);
+  }
 }
-.title {
+.contact {
+  position: absolute;
+  top: 50px;
+  right: 60px;
+  * {
+    font-size: rem(14px);
+  }
+  &__list {
+    list-style: none;
+    padding: 0;
+  }
+  &__item {
+    display: inline;
+    &:not(:last-child)::after {
+      content: '/';
+      margin: 0 rem(5px);
+    }
+  }
 }
-.description {
+.money {
+  position: absolute;
+  top: 40vh;
+  left: 50%;
+  transform: translateX(-50%) perspective(1px);
+  text-align: center;
+}
+.job-title * {
+  font-size: rem(20px);
+}
+.showreel-cta {
+  font-size: rem(50px);
+  line-height: 1em;
+}
+.showreel {
+  display: none;
+}
+$photo-width: 480px;
+.bio {
+  position: absolute;
+  top: 120vh;
+  width: 80%;
+  max-width: 1024px;
+  left: 50%;
+  transform: translateX(-50%) perspective(1px);
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 160px;
+    background-color: white;
+    top: -200px;
+    left: 50%;
+  }
+  &__text {
+    position: absolute;
+    max-width: 560px;
+    width: 50%;
+    left: $photo-width - 20px;
+    top: 50px;
+  }
+  &__title {
+    * {
+      font-size: rem(70px);
+    }
+  }
+  &__copy {
+    padding-left: 70px;
+  }
+  &__photo {
+    width: $photo-width;
+  }
 }
 </style>

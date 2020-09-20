@@ -17,7 +17,11 @@ export default {
   css: ['assets/styles/index.scss'],
   plugins: [],
   components: true,
-  buildModules: ['@nuxtjs/google-fonts', '@nuxtjs/svg'],
+  buildModules: [
+    '@nuxtjs/google-fonts',
+    '@nuxtjs/svg',
+    '@nuxtjs/style-resources',
+  ],
   modules: ['@nuxtjs/pwa', '@nuxtjs/prismic'],
   prismic: {
     endpoint: 'https://cotelette.cdn.prismic.io/api/v2',
@@ -28,6 +32,9 @@ export default {
       'Vesper+Libre': true,
     },
     display: 'swap',
+  },
+  styleResources: {
+    scss: ['~~/node_modules/sass-rem/_rem.scss'],
   },
   build: {
     extend(config, ctx) {

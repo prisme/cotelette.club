@@ -30,17 +30,19 @@ button::-moz-focus-inner {
   padding: 0;
 }
 
-body,
-html {
-  touch-action: manipulation;
-  font-size: 100%;
+body {
+  font-family: 'Vesper Libre', serif;
+  font-size: rem(16px);
+  font-display: optional;
   -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: none;
+  -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+  background-color: #131313;
 }
 
-body {
-  background-color: #131313;
+body,
+a {
+  color: white;
 }
