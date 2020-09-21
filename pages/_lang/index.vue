@@ -32,9 +32,14 @@
         <prismic-rich-text class="credit" :field="credit" />
       </div>
     </div>
-    <video autoplay loop playsinline muted class="video-background">
-      <source :src="video.url" type="video/mp4" />
-    </video>
+    <video
+      autoplay
+      loop
+      playsinline
+      muted
+      class="video-background"
+      :src="videoUrl"
+    />
   </article>
 </template>
 
@@ -44,11 +49,28 @@ export default {
   components: {
     PlayBtn,
   },
+  data() {
+    return {
+      videoUrl: null,
+    }
+  },
   methods: {
     playReel() {
       const { display } = this.$refs.showreel.style
       this.$refs.showreel.style.display = display === 'block' ? 'none' : 'block'
     },
+    onResize() {
+      const isPortrait = '( max-width: 720px) and ( max-aspect-ratio: 13/9 )'
+      this.videoUrl = window.matchMedia(isPortrait).matches
+        ? this.video_portrait.url
+        : this.video.url
+    },
+  },
+  mounted: function () {
+    this.$nextTick(function () {
+      this.onResize()
+    })
+    window.addEventListener('resize', this.onResize)
   },
   async asyncData({ $prismic, params, error }) {
     try {
