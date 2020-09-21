@@ -23,11 +23,7 @@ export default {
   css: ['assets/styles/index.scss'],
   plugins: [],
   components: true,
-  buildModules: [
-    '@nuxtjs/google-fonts',
-    '@nuxtjs/svg',
-    '@nuxtjs/style-resources',
-  ],
+  buildModules: ['@nuxtjs/google-fonts', '@nuxtjs/svg', '@nuxtjs/style-resources'],
   modules: ['@nuxtjs/pwa', '@nuxtjs/prismic'],
   prismic: {
     endpoint: 'https://cotelette.cdn.prismic.io/api/v2',
@@ -40,7 +36,7 @@ export default {
     display: 'swap',
   },
   styleResources: {
-    scss: ['~~/node_modules/sass-rem/_rem.scss'],
+    scss: ['~~/node_modules/sass-rem/_rem.scss', 'assets/styles/_responsive.scss'],
   },
   build: {
     extend(config, ctx) {

@@ -1,0 +1,23 @@
+// Breakpoints
+$s-breakpoint: 375px;
+$m-breakpoint: 530px;
+$l-breakpoint: 1024px;
+$xl-breakpoint: 1280px;
+
+$breakpoints: (
+  s: rem($s-breakpoint),
+  m: rem($m-breakpoint),
+  l: rem($l-breakpoint),
+  xl: rem($xl-breakpoint),
+);
+
+// Mixin calculating all rules for a specific media query
+// Usage: @include responsive('l') { font-size: 20px; }
+@mixin responsive($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $breakpoint: map-get($breakpoints, $breakpoint);
+  }
+  @media screen and (min-width: $breakpoint) {
+    @content;
+  }
+}

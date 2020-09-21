@@ -5,9 +5,9 @@
     <nav class="contact">
       <ul class="contact__list">
         <li v-for="link in contact_links" :key="link.id" class="contact__item">
-          <prismic-link :field="link.link">{{
-            $prismic.asText(link.label)
-          }}</prismic-link>
+          <prismic-link :field="link.link">
+            {{ $prismic.asText(link.label) }}
+          </prismic-link>
         </li>
       </ul>
     </nav>
@@ -69,7 +69,9 @@ export default {
   head() {
     const { meta_title, meta_description, meta_image } = this
     const title = meta_title.length ? this.meta_title[0].text : ''
-    const description = meta_description.length ? this.meta_description[0].text : ''
+    const description = meta_description.length
+      ? this.meta_description[0].text
+      : ''
     const image = this.meta_image.url || ''
     return {
       title,
@@ -83,7 +85,7 @@ export default {
         { hid: 'og:description', name: 'og:description', content: description },
         { hid: 'og:image', name: 'og:image', content: image },
       ],
-}
+    }
   },
 }
 </script>
@@ -104,18 +106,34 @@ export default {
 }
 .name {
   position: absolute;
-  top: 50px;
-  left: 60px;
+  top: rem(25px);
+  left: rem(30px);
   * {
-    font-size: rem(16px);
+    font-size: rem(12px);
+    line-height: 1em;
+  }
+  @include responsive('m') {
+    top: rem(50px);
+    left: rem(60px);
+    * {
+      font-size: rem(16px);
+    }
   }
 }
 .contact {
   position: absolute;
-  top: 50px;
-  right: 60px;
+  top: rem(25px);
+  right: rem(30px);
   * {
-    font-size: rem(14px);
+    font-size: rem(10px);
+    line-height: 1.2em;
+  }
+  @include responsive('m') {
+    top: rem(50px);
+    right: rem(60px);
+    * {
+      font-size: rem(14px);
+    }
   }
   &__list {
     list-style: none;
@@ -136,12 +154,28 @@ export default {
   transform: translateX(-50%) perspective(1px);
   text-align: center;
 }
-.job-title * {
-  font-size: rem(20px);
+.job-title {
+  * {
+    font-size: rem(12px);
+  }
+  @include responsive('m') {
+    * {
+      font-size: rem(20px);
+    }
+  }
 }
 .showreel-cta {
-  font-size: rem(50px);
+  font-size: rem(27.5px);
+  @include responsive('m') {
+    font-size: rem(50px);
+  }
   line-height: 1em;
+  &__play {
+    transform: scale(0.7) translateY(42%);
+    @include responsive('m') {
+      transform: none;
+    }
+  }
 }
 .showreel {
   display: none;
