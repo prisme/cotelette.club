@@ -24,8 +24,8 @@
 
     <div class="bio">
       <div class="bio__text">
-        <prismic-rich-text class="bio__title" :field="title" />
-        <prismic-rich-text class="bio__copy" :field="description" />
+        <prismic-rich-text class="bio__title" :field="biography_title" />
+        <prismic-rich-text class="bio__copy" :field="biography" />
       </div>
       <div class="bio__photo">
         <prismic-image class="photo" :field="photo" />
@@ -58,7 +58,6 @@ export default {
       if (params.lang !== undefined || null) {
         lang = { lang: params.lang }
       }
-
       const document = await $prismic.api.getSingle('homepage', lang)
       return {
         ...document.data,
@@ -66,6 +65,25 @@ export default {
     } catch (e) {
       error({ statusCode: 404, message: 'Page not found' })
     }
+  },
+  head() {
+    const { meta_title, meta_description, meta_image } = this
+    const title = meta_title.length ? this.meta_title[0].text : ''
+    const description = meta_description.length ? this.meta_description[0].text : ''
+    const image = this.meta_image.url || ''
+    return {
+      title,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: description,
+        },
+        { hid: 'og:title', name: 'og:title', content: title },
+        { hid: 'og:description', name: 'og:description', content: description },
+        { hid: 'og:image', name: 'og:image', content: image },
+      ],
+}
   },
 }
 </script>
