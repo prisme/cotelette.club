@@ -11,25 +11,33 @@
         </li>
       </ul>
     </nav>
-
     <div class="money">
       <prismic-rich-text class="job-title" :field="job_title" />
       <button class="showreel-cta">
-        <span>show</span>
-        <PlayBtn class="showreel__play" @click="playReel" />
-        <span>reel</span>
+        <span>show</span
+        ><PlayBtn class="showreel-cta__play" @click="playReel" /><span
+          >reel</span
+        >
       </button>
       <prismic-embed class="showreel" :field="showreel" ref="showreel" />
     </div>
-
     <div class="bio">
-      <div class="bio__text">
-        <prismic-rich-text class="bio__title" :field="biography_title" />
-        <prismic-rich-text class="bio__copy" :field="biography" />
-      </div>
+      <prismic-rich-text
+        v-if="isPortrait"
+        class="bio__title"
+        :field="biography_title"
+      />
       <div class="bio__photo">
-        <prismic-image class="photo" :field="photo" />
-        <prismic-rich-text class="credit" :field="credit" />
+        <prismic-image :field="photo" />
+        <prismic-rich-text class="bio__credit" :field="credit" />
+      </div>
+      <div class="bio__text">
+        <prismic-rich-text
+          v-if="!isPortrait"
+          class="bio__title"
+          :field="biography_title"
+        />
+        <prismic-rich-text class="bio__copy" :field="biography" />
       </div>
     </div>
     <video
@@ -45,6 +53,8 @@
 
 <script>
 import PlayBtn from '~/assets/images/play.svg?inline'
+import debounce from 'lodash.debounce'
+
 export default {
   components: {
     PlayBtn,
@@ -52,6 +62,7 @@ export default {
   data() {
     return {
       videoUrl: null,
+      isPortrait: true,
     }
   },
   methods: {
@@ -60,17 +71,16 @@ export default {
       this.$refs.showreel.style.display = display === 'block' ? 'none' : 'block'
     },
     onResize() {
-      const isPortrait = '( max-width: 720px) and ( max-aspect-ratio: 13/9 )'
-      this.videoUrl = window.matchMedia(isPortrait).matches
-        ? this.video_portrait.url
-        : this.video.url
+      const { video_portrait, video } = this
+      const { innerWidth, innerHeight } = window
+      this.isPortrait = innerWidth < innerHeight || innerWidth < 720
+      this.videoUrl = this.isPortrait ? video_portrait.url : video.url
     },
   },
-  mounted: function () {
-    this.$nextTick(function () {
-      this.onResize()
-    })
-    window.addEventListener('resize', this.onResize)
+  async mounted() {
+    await this.$nextTick
+    this.onResize()
+    window.addEventListener('resize', debounce(this.onResize, 50))
   },
   async asyncData({ $prismic, params, error }) {
     try {
@@ -81,9 +91,7 @@ export default {
         lang = { lang: params.lang }
       }
       const document = await $prismic.api.getSingle('homepage', lang)
-      return {
-        ...document.data,
-      }
+      return { ...document.data }
     } catch (e) {
       error({ statusCode: 404, message: 'Page not found' })
     }
@@ -114,7 +122,14 @@ export default {
 
 <style lang="scss">
 .root {
+  max-width: 100vw;
+  overflow-x: hidden;
   min-height: 100vh;
+}
+@supports (-webkit-touch-callout: none) {
+  .root {
+    height: -webkit-fill-available;
+  }
 }
 .video-background {
   object-fit: cover;
@@ -128,15 +143,19 @@ export default {
 }
 .name {
   position: absolute;
-  top: rem(25px);
-  left: rem(30px);
+  $top: 50px;
+  $left: 60px;
   * {
-    font-size: rem(12px);
     line-height: 1em;
   }
+  top: rem($top/2);
+  left: rem($left/2);
+  * {
+    font-size: rem(12px);
+  }
   @include responsive('m') {
-    top: rem(50px);
-    left: rem(60px);
+    top: rem($top);
+    left: rem($left);
     * {
       font-size: rem(16px);
     }
@@ -168,6 +187,12 @@ export default {
       margin: 0 rem(5px);
     }
   }
+  a {
+    border-bottom: 0.5px solid white;
+    display: inline-block;
+    line-height: 1;
+    text-decoration: none;
+  }
 }
 .money {
   position: absolute;
@@ -177,66 +202,125 @@ export default {
   text-align: center;
 }
 .job-title {
+  line-height: 0.5;
   * {
     font-size: rem(12px);
   }
   @include responsive('m') {
+    line-height: normal;
     * {
       font-size: rem(20px);
     }
   }
 }
 .showreel-cta {
+  line-height: 1em;
+  letter-spacing: 0.03em;
   font-size: rem(27.5px);
   @include responsive('m') {
     font-size: rem(50px);
   }
-  line-height: 1em;
   &__play {
-    transform: scale(0.7) translateY(42%);
+    transform: scale(0.9) translateY(30%);
     @include responsive('m') {
-      transform: none;
+      transform: scale(1.1) translateY(11%);
+      margin: 0 0.1em;
     }
   }
 }
 .showreel {
   display: none;
 }
-$photo-width: 480px;
 .bio {
   position: absolute;
   top: 120vh;
-  width: 80%;
+  width: 64%;
+  @include responsive('m') {
+    width: 80%;
+  }
   max-width: 1024px;
   left: 50%;
   transform: translateX(-50%) perspective(1px);
+
   &::before {
     content: '';
     display: block;
     position: absolute;
     width: 1px;
-    height: 160px;
+    height: 200px;
     background-color: white;
-    top: -200px;
-    left: 50%;
+    top: -140px;
+    @media screen and (min-height: 400px) {
+      top: -240px;
+    }
+    left: 51.5%;
   }
   &__text {
-    position: absolute;
-    max-width: 560px;
-    width: 50%;
-    left: $photo-width - 20px;
-    top: 50px;
+    padding-bottom: 20vh;
+    padding-top: 1em;
+    @include responsive('m') {
+      padding-top: 0;
+      position: absolute;
+      max-width: 560px;
+      width: 45%;
+      left: unquote('min(63%, 530px)');
+      top: 50px;
+    }
   }
   &__title {
+    position: relative;
+    z-index: 1;
+    line-height: 0.4;
+    left: -20px;
     * {
-      font-size: rem(70px);
+      font-size: rem(35px);
+    }
+    @include responsive('m') {
+      z-index: 0;
+      line-height: unset;
+      // left: 0;
+      left: -70px;
+      * {
+        font-size: rem(70px);
+      }
     }
   }
   &__copy {
-    padding-left: 70px;
+    * {
+      font-size: rem(12px);
+    }
+    @include responsive('m') {
+      // padding-left: 70px;
+      * {
+        font-size: rem(14px);
+      }
+    }
+    p {
+      margin: 0 0 1em;
+    }
   }
   &__photo {
-    width: $photo-width;
+    max-width: 480px;
+    width: 100%;
+    @include responsive('m') {
+      width: 55%;
+    }
+    img {
+      display: block;
+      width: 100%;
+    }
+  }
+  &__credit {
+    padding: 0.2em 0;
+    color: fade-out(white, 0.3);
+    * {
+      font-size: rem(8px);
+    }
+    @include responsive('m') {
+      * {
+        font-size: rem(10px);
+      }
+    }
   }
 }
 </style>
