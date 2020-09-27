@@ -197,14 +197,14 @@ export default {
 .money {
   position: absolute;
   top: 40vh;
-  left: 50%;
+  left: 50.4%;
   transform: translateX(-50%) perspective(1px);
   text-align: center;
 }
 .job-title {
-  line-height: 0.5;
+  line-height: 1;
   * {
-    font-size: rem(12px);
+    font-size: 14px;
   }
   @include responsive('m') {
     line-height: normal;
@@ -216,9 +216,9 @@ export default {
 .showreel-cta {
   line-height: 1em;
   letter-spacing: 0.03em;
-  font-size: rem(27.5px);
+  font-size: 32px;
   @include responsive('m') {
-    font-size: rem(50px);
+    font-size: 47px;
   }
   &__play {
     transform: scale(0.9) translateY(30%);
@@ -227,13 +227,17 @@ export default {
       margin: 0 0.1em;
     }
   }
+  span:nth-of-type(2n) {
+    letter-spacing: 0.05em;
+    margin-left: 0.1em;
+  }
 }
 .showreel {
   display: none;
 }
 .bio {
   position: absolute;
-  top: 120vh;
+  top: 110vh;
   width: 64%;
   @include responsive('m') {
     width: 80%;
