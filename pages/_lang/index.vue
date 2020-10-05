@@ -1,7 +1,6 @@
 <template>
-  <article class="root">
+  <main class="root">
     <prismic-rich-text class="name" :field="name" />
-
     <nav class="contact">
       <ul class="contact__list">
         <li v-for="link in contact_links" :key="link.id" class="contact__item">
@@ -12,15 +11,37 @@
       </ul>
     </nav>
     <div class="money">
-      <prismic-rich-text class="job-title" :field="job_title" />
-      <button class="showreel-cta">
-        <span>show</span
-        ><PlayBtn class="showreel-cta__play" @click="playReel" /><span
+      <button>
+        <prismic-rich-text class="job-title" :field="job_title" />
+        <span class="showreel-cta">show</span
+        ><PlayBtn class="showreel-cta__play" @click="openReel" /><span
+          class="showreel-cta"
           >reel</span
         >
       </button>
-      <prismic-embed class="showreel" :field="showreel" ref="showreel" />
     </div>
+    <transition-group name="fade">
+      <button
+        v-show="isReelShown"
+        class="showreel__close"
+        @click="closeReel"
+        key="showreel__close"
+      >
+        <CloseBtn />
+      </button>
+      <vue-plyr
+        v-show="isReelShown"
+        class="showreel"
+        :options="plyrOptions"
+        key="showreel__player"
+        ref="plyr"
+      >
+        <div
+          data-plyr-provider="vimeo"
+          :data-plyr-embed-id="showreel.video_id"
+        ></div>
+      </vue-plyr>
+    </transition-group>
     <div class="bio">
       <prismic-rich-text
         v-if="isPortrait"
@@ -48,27 +69,44 @@
       class="video-background"
       :src="videoUrl"
     />
-  </article>
+  </main>
 </template>
 
 <script>
 import PlayBtn from '~/assets/images/play.svg?inline'
+import CloseBtn from '~/assets/images/close.svg?inline'
 import debounce from 'lodash.debounce'
 
 export default {
   components: {
     PlayBtn,
+    CloseBtn,
   },
   data() {
     return {
       videoUrl: null,
       isPortrait: true,
+      plyrOptions: {
+        controls: ['mute', 'fullscreen'],
+        fullscreen: { iosNative: true },
+      },
+      isReelShown: false,
     }
   },
   methods: {
-    playReel() {
-      const { display } = this.$refs.showreel.style
-      this.$refs.showreel.style.display = display === 'block' ? 'none' : 'block'
+    openReel() {
+      this.isReelShown = true
+      this.$refs.plyr.player.play()
+      document.body.style.position = 'fixed'
+      document.body.style.overflow = 'hidden'
+      document.body.style.width = '100%'
+    },
+    closeReel() {
+      this.isReelShown = false
+      this.$refs.plyr.player.stop()
+      document.body.style.position = ''
+      document.body.style.overflow = ''
+      document.body.style.width = ''
     },
     onResize() {
       const { video_portrait, video } = this
@@ -131,6 +169,44 @@ export default {
     height: -webkit-fill-available;
   }
 }
+.showreel {
+  // display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  .plyr--video {
+    background-color: #131313;
+    .plyr__controls {
+      margin: 0 3.75rem 3.125rem;
+      .plyr__control {
+        padding: 0.5em;
+      }
+    }
+  }
+  &__close {
+    // drunk css is the best
+    &,
+    &:hover {
+      position: absolute;
+      $vert: 50px;
+      top: rem($vert/4);
+      right: 3.75rem;
+      @include responsive('m') {
+        top: calc(3.125rem - 0.6em); // who cares
+      }
+      z-index: 2;
+      padding: 0.5em;
+      width: var(--plyr-control-icon-size, 18px);
+      height: var(--plyr-control-icon-size, 18px);
+      svg {
+        fill: white;
+      }
+    }
+  }
+}
 .video-background {
   object-fit: cover;
   position: fixed;
@@ -143,6 +219,7 @@ export default {
 }
 .name {
   position: absolute;
+  z-index: 2;
   $top: 50px;
   $left: 60px;
   * {
@@ -151,7 +228,7 @@ export default {
   top: rem($top/2);
   left: rem($left/2);
   * {
-    font-size: rem(12px);
+    font-size: rem(14px);
   }
   @include responsive('m') {
     top: rem($top);
@@ -204,21 +281,21 @@ export default {
 .job-title {
   line-height: 1;
   * {
-    font-size: 14px;
+    font-size: rem(14px);
   }
   @include responsive('m') {
     line-height: normal;
     * {
-      font-size: rem(20px);
+      font-size: rem(19px);
     }
   }
 }
 .showreel-cta {
   line-height: 1em;
   letter-spacing: 0.03em;
-  font-size: 32px;
+  font-size: rem(34px);
   @include responsive('m') {
-    font-size: 47px;
+    font-size: rem(47px);
   }
   &__play {
     transform: scale(0.9) translateY(30%);
@@ -226,14 +303,17 @@ export default {
       transform: scale(1.1) translateY(11%);
       margin: 0 0.1em;
     }
+    path {
+      fill: white;
+    }
+    circle {
+      stroke: white;
+    }
   }
   span:nth-of-type(2n) {
     letter-spacing: 0.05em;
     margin-left: 0.1em;
   }
-}
-.showreel {
-  display: none;
 }
 .bio {
   position: absolute;
@@ -326,5 +406,13 @@ export default {
       }
     }
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity $anim-transition-in;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

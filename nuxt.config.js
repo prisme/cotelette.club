@@ -21,8 +21,8 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  css: ['assets/styles/index.scss'],
-  plugins: [],
+  css: ['assets/styles/index.scss', 'plyr/dist/plyr.css'],
+  plugins: ['~/plugins/vue-plyr'],
   components: true,
   buildModules: [
     '@nuxtjs/google-fonts',
@@ -43,11 +43,13 @@ export default {
   styleResources: {
     scss: [
       '~~/node_modules/sass-rem/_rem.scss',
+      'assets/styles/_animation.scss',
       'assets/styles/_responsive.scss',
     ],
   },
   build: {
     extend(config, ctx) {
+      // to transform link with <nuxt-link> for the htmlSerializer
       config.resolve.alias['vue'] = 'vue/dist/vue.common'
     },
   },

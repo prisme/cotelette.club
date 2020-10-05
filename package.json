@@ -13,7 +13,9 @@
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "@nuxtjs/style-resources": "^1.0.0",
     "lodash.debounce": "^4.0.8",
-    "nuxt": "^2.14.0"
+    "nuxt": "^2.14.0",
+    "plyr": "^3.6.2",
+    "vue-plyr": "^6.0.4"
   },
   "devDependencies": {
     "@nuxtjs/google-fonts": "^1.0.2",
