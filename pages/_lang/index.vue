@@ -318,7 +318,7 @@ export default {
 .bio {
   position: absolute;
   top: 110vh;
-  width: 64%;
+  width: 65%;
   @include responsive('m') {
     width: 80%;
   }
@@ -371,7 +371,7 @@ export default {
   }
   &__copy {
     * {
-      font-size: rem(12px);
+      font-size: rem(13px);
     }
     @include responsive('m') {
       // padding-left: 70px;
