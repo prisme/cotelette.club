@@ -11,11 +11,10 @@
       </ul>
     </nav>
     <div class="money">
-      <button>
+      <button @click="openReel">
         <prismic-rich-text class="job-title" :field="job_title" />
         <span class="showreel-cta">show</span
-        ><PlayBtn class="showreel-cta__play" @click="openReel" /><span
-          class="showreel-cta"
+        ><PlayBtn class="showreel-cta__play" /><span class="showreel-cta"
           >reel</span
         >
       </button>
