@@ -88,6 +88,7 @@ export default {
       plyrOptions: {
         controls: ['mute', 'fullscreen'],
         fullscreen: { iosNative: true },
+        hideControls: false,
       },
       isReelShown: false,
     }
@@ -168,18 +169,22 @@ export default {
     height: -webkit-fill-available;
   }
 }
+$y: 50px;
+$x: 60px;
 .showreel {
-  // display: none;
   position: fixed;
+  z-index: 1;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
   .plyr--video {
     background-color: #131313;
     .plyr__controls {
-      margin: 0 3.75rem 3.125rem;
+      margin: 0 rem($x/2) 3.125rem;
+      @include responsive('m') {
+        margin: 0 rem($x) 3.125rem;
+      }
       .plyr__control {
         padding: 0.5em;
       }
@@ -190,11 +195,11 @@ export default {
     &,
     &:hover {
       position: absolute;
-      $vert: 50px;
-      top: rem($vert/4);
-      right: 3.75rem;
+      top: rem($y/4);
+      right: rem($x/2);
       @include responsive('m') {
         top: calc(3.125rem - 0.6em); // who cares
+        right: rem($x);
       }
       z-index: 2;
       padding: 0.5em;
@@ -216,42 +221,35 @@ export default {
   z-index: -1;
   pointer-events: none;
 }
-.name {
+.name,
+.contact {
   position: absolute;
-  z-index: 2;
-  $top: 50px;
-  $left: 60px;
+  top: rem($y/2);
+  @include responsive('m') {
+    top: rem($y);
+  }
   * {
     line-height: 1em;
-  }
-  top: rem($top/2);
-  left: rem($left/2);
-  * {
     font-size: rem(14px);
-  }
-  @include responsive('m') {
-    top: rem($top);
-    left: rem($left);
-    * {
+    @include responsive('m') {
       font-size: rem(16px);
     }
   }
 }
-.contact {
-  position: absolute;
-  top: rem(25px);
-  right: rem(30px);
-  * {
-    font-size: rem(10px);
-    line-height: 1.2em;
-  }
+.name {
+  z-index: 2;
+  left: rem($x/2);
   @include responsive('m') {
-    top: rem(50px);
-    right: rem(60px);
-    * {
-      font-size: rem(14px);
-    }
+    left: rem($x);
   }
+}
+.contact {
+  right: rem($x/2);
+  @include responsive('m') {
+    right: rem($x);
+  }
+}
+.contact {
   &__list {
     list-style: none;
     padding: 0;
@@ -274,14 +272,18 @@ export default {
   position: absolute;
   top: 40vh;
   left: 50.4%;
-  transform: translateX(-50%) perspective(1px);
   text-align: center;
+  transform: translateX(-50%) perspective(1px) scale(1.1);
+  @include responsive('m') {
+    transform: translateX(-50%) perspective(1px) scale(1);
+  }
 }
 .job-title {
   line-height: 1;
   * {
     font-size: rem(14px);
   }
+
   @include responsive('m') {
     line-height: normal;
     * {
