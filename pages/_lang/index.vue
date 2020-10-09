@@ -226,11 +226,12 @@ $x: 60px;
   position: absolute;
   top: rem($y/2);
   @include responsive('m') {
+    position: fixed;
     top: rem($y);
   }
   * {
     line-height: 1em;
-    font-size: rem(14px);
+    font-size: rem(13px);
     @include responsive('m') {
       font-size: rem(16px);
     }
