@@ -1,4 +1,5 @@
 # cotelette.club
-website for my friend Jean-Baptiste Sachsé, aka Cotelette
+website for my friend Jean-Baptiste Sachsé, aka Cotelette  
+Nuxt / Prismic / Netlify stack  
 
-https://cotelette.netlify.app/
+https://cotelette.club/
