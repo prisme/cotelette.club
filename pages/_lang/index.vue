@@ -181,6 +181,7 @@ $x: 60px;
   .plyr--video {
     background-color: #131313;
     .plyr__controls {
+      background: none;
       margin: 0 rem($x/2) 3.125rem;
       @include responsive('m') {
         margin: 0 rem($x) 3.125rem;
@@ -191,14 +192,13 @@ $x: 60px;
     }
   }
   &__close {
-    // drunk css is the best
     &,
     &:hover {
       position: absolute;
       top: rem($y/4);
       right: rem($x/2);
       @include responsive('m') {
-        top: calc(3.125rem - 0.6em); // who cares
+        top: calc(3.125rem - 0.6em);
         right: rem($x);
       }
       z-index: 2;
